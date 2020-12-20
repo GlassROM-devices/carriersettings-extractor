@@ -178,7 +178,10 @@ with open('apns-full-conf.xml', 'w', encoding='utf-8') as f:
     f.write('<apns version="8">\n\n')
 
     for entry in carrier_list.entry:
-        setting = all_settings[entry.canonicalName]
+        try:
+            setting = all_settings[entry.canonicalName]
+        except KeyError as e:
+            print("ignoring carrier ", e)
         for apn in setting.apns.apn:
             f.write('  <apn carrier={}\n'.format(quoteattr(apn.name)))
             apn_element = ApnElement(apn, entry.carrierId)
